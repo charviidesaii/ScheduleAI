@@ -46,7 +46,7 @@ const ResultsPage = () => {
     const [dbReviews, setDbReviews] = useState([]);
 
     useEffect(() => {
-        fetch('http://localhost:3001/api/reviews')
+        fetch('/api/reviews')
             .then(res => res.json())
             .then(data => {
                 if (data.data) setDbReviews(data.data);
@@ -249,7 +249,7 @@ const ResultsPage = () => {
                                                                 {cls.reviews.map((review, rIdx) => (
                                                                     <div key={rIdx} className="bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
                                                                         <div className="flex justify-between items-start mb-1">
-                                                                            <span className="text-xs font-bold text-slate-700">{review.user}</span>
+                                                                            <span className="text-xs font-bold text-slate-700">{review.user === 'You' ? 'User' : review.user}</span>
                                                                             <span className="text-xs font-bold text-amber-500">★ {review.rating}</span>
                                                                         </div>
                                                                         {review.comment && review.comment.trim() && <p className="text-sm text-slate-600 italic">"{review.comment}"</p>}

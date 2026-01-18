@@ -39,21 +39,21 @@ const RateProfessorsPage = () => {
     }, [startTime, endTime]);
 
     useEffect(() => {
-        fetch('http://localhost:3001/api/professors')
+        fetch('/api/professors')
             .then(res => res.json())
             .then(data => {
                 if (data.data) setProfessors(data.data);
             })
             .catch(err => console.error("Error fetching professors:", err));
 
-        fetch('http://localhost:3001/api/reviews')
+        fetch('/api/reviews')
             .then(res => res.json())
             .then(data => {
                 if (data.data) setReviews(data.data);
             })
             .catch(err => console.error("Error fetching reviews:", err));
 
-        fetch('http://localhost:3001/api/courses')
+        fetch('/api/courses')
             .then(res => res.json())
             .then(data => {
                 if (data.data) setCourses(data.data);
@@ -73,7 +73,7 @@ const RateProfessorsPage = () => {
             profName = newProfName;
             // 1. Add Professor
             try {
-                const profRes = await fetch('http://localhost:3001/api/professors', {
+                const profRes = await fetch('/api/professors', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name: newProfName, department: 'N/A' }) // Department optional for now
@@ -84,7 +84,7 @@ const RateProfessorsPage = () => {
 
                 // 2. Add Course (Subject)
                 const courseId = newSubject.toUpperCase().slice(0, 8);
-                const courseRes = await fetch('http://localhost:3001/api/courses', {
+                const courseRes = await fetch('/api/courses', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -114,12 +114,12 @@ const RateProfessorsPage = () => {
         const courseId = isNew ? newSubject.toUpperCase().slice(0, 8).trim() : 'General';
 
         try {
-            const reviewRes = await fetch('http://localhost:3001/api/reviews', {
+            const reviewRes = await fetch('/api/reviews', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     professor_name: profName,
-                    user_name: "You",
+                    user_name: "User",
                     rating: rating,
                     comment: comment,
                     course_id: courseId
@@ -135,7 +135,7 @@ const RateProfessorsPage = () => {
                         profName: profName,
                         rating: rating,
                         comment: comment,
-                        user: "You"
+                        user: "User"
                     }
                 }
             });

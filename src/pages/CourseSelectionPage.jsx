@@ -12,7 +12,7 @@ const CourseSelectionPage = () => {
 
     useEffect(() => {
         // Fetch courses from backend
-        fetch('http://localhost:3001/api/courses')
+        fetch('/api/courses')
             .then(res => res.json())
             .then(data => {
                 if (data.data) {
