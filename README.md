@@ -36,7 +36,7 @@ All course and professor data is mock data, and no real UCSC enrollment systems 
 
 ## Running Locally
 
-To run SchedMaster locally, clone the repository from GitHub and install the required dependencies. After installation, start the development server and open the application in your browser at `http://localhost:5173`. This allows you to explore and modify the project in a local development environment.
+To run SchedMaster locally, clone the repository from GitHub and install the required dependencies. After installation, start the development server and open the application in your browser at ` (http://169.233.121.48:5173/)`. This allows you to explore and modify the project in a local development environment.
 
 ---
 
