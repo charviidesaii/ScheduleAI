@@ -26,16 +26,28 @@ app.get('/api/professors', (req, res) => {
 // Add a new professor
 app.post('/api/professors', (req, res) => {
     const { name, department } = req.body;
-    const sql = 'INSERT INTO professors (name, department) VALUES (?,?)';
-    const params = [name, department];
-    db.run(sql, params, function (err, result) {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
+
+    const checkSql = "SELECT * FROM professors WHERE name = ?";
+    db.get(checkSql, [name], (err, row) => {
+        if (err) return res.status(400).json({ "error": err.message });
+        if (row) {
+            return res.json({
+                "message": "success",
+                "data": row
+            });
         }
-        res.json({
-            "message": "success",
-            "data": { id: this.lastID, name, department }
+
+        const sql = 'INSERT INTO professors (name, department) VALUES (?,?)';
+        const params = [name, department];
+        db.run(sql, params, function (err, result) {
+            if (err) {
+                res.status(400).json({ "error": err.message });
+                return;
+            }
+            res.json({
+                "message": "success",
+                "data": { id: this.lastID, name, department }
+            });
         });
     });
 });
@@ -58,16 +70,28 @@ app.get('/api/courses', (req, res) => {
 // Add a new course
 app.post('/api/courses', (req, res) => {
     const { id, name, credits, days, start_time, end_time } = req.body;
-    const sql = 'INSERT INTO courses (id, name, credits, days, start_time, end_time) VALUES (?,?,?,?,?,?)';
-    const params = [id, name, credits, days, start_time, end_time];
-    db.run(sql, params, function (err, result) {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
+
+    const checkSql = "SELECT * FROM courses WHERE id = ?";
+    db.get(checkSql, [id], (err, row) => {
+        if (err) return res.status(400).json({ "error": err.message });
+        if (row) {
+            return res.json({
+                "message": "success",
+                "data": row
+            });
         }
-        res.json({
-            "message": "success",
-            "data": { id, name, credits, days, start_time, end_time }
+
+        const sql = 'INSERT INTO courses (id, name, credits, days, start_time, end_time) VALUES (?,?,?,?,?,?)';
+        const params = [id, name, credits, days, start_time, end_time];
+        db.run(sql, params, function (err, result) {
+            if (err) {
+                res.status(400).json({ "error": err.message });
+                return;
+            }
+            res.json({
+                "message": "success",
+                "data": { id, name, credits, days, start_time, end_time }
+            });
         });
     });
 });

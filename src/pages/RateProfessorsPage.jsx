@@ -65,12 +65,17 @@ const RateProfessorsPage = () => {
         const isNew = selectedProf === 'add_new';
         let profId = selectedProf;
         let profName = professors.find(p => p.id == selectedProf)?.name;
+        let finalCourseId = 'General';
 
         // Clear previous errors
         setError('');
 
         if (isNew) {
             profName = newProfName;
+            // Generate unique Course ID
+            const cleanName = newSubject.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().slice(0, 6);
+            finalCourseId = `${cleanName}-${Math.floor(Math.random() * 1000)}`;
+
             // 1. Add Professor
             try {
                 const profRes = await fetch('/api/professors', {
@@ -78,17 +83,24 @@ const RateProfessorsPage = () => {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name: newProfName, department: 'N/A' }) // Department optional for now
                 });
-                if (!profRes.ok) throw new Error('Failed to create professor');
+
+                // If professor exists, we might get a 400 or a success with data. 
+                // Ideally backend should handle existence, but if not we assume success or fail.
+                // We will handle backend updates separately.
+                if (!profRes.ok) {
+                    // If 400, it might be duplicate, but we'll throw for now unless we sniff the body
+                    const errData = await profRes.json().catch(() => ({}));
+                    throw new Error(errData.error || 'Failed to create professor');
+                }
                 const profData = await profRes.json();
                 profId = profData.data.id;
 
                 // 2. Add Course (Subject)
-                const courseId = newSubject.toUpperCase().slice(0, 8);
                 const courseRes = await fetch('/api/courses', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        id: courseId,
+                        id: finalCourseId,
                         name: newSubject,
                         credits: 3,
                         days: days,
@@ -100,19 +112,13 @@ const RateProfessorsPage = () => {
 
             } catch (error) {
                 console.error("Error saving new data:", error);
-                setError('Failed to save new professor/course details. Please try again.');
+                console.error("Error saving new data:", error);
+                setError(`Failed to save: ${error.message}`);
                 return;
             }
         }
 
         // 3. Add Review
-        /* 
-           Ideally we should map course ID here correctly. 
-           For existing professors, we don't know the course they teach from select.
-           Optimistically, let's just save the review.
-        */
-        const courseId = isNew ? newSubject.toUpperCase().slice(0, 8).trim() : 'General';
-
         try {
             const reviewRes = await fetch('/api/reviews', {
                 method: 'POST',
@@ -122,7 +128,7 @@ const RateProfessorsPage = () => {
                     user_name: "User",
                     rating: rating,
                     comment: comment,
-                    course_id: courseId
+                    course_id: finalCourseId
                 })
             });
 
@@ -130,7 +136,7 @@ const RateProfessorsPage = () => {
 
             navigate('/courses', {
                 state: {
-                    newCourse: isNew ? { name: newSubject, id: newSubject.toUpperCase().slice(0, 8), credits: 3 } : null,
+                    newCourse: isNew ? { name: newSubject, id: finalCourseId, credits: 3 } : null,
                     submittedReview: {
                         profName: profName,
                         rating: rating,
