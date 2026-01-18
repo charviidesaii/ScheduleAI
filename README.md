@@ -22,7 +22,7 @@ SchedMaster follows a guided three-step flow that mirrors how UCSC students typi
 
 ## Tech Stack
 
-SchedMaster is built with a modern JavaScript frontend using **React** and **Vite** for fast development and performance. Styling is handled with **Tailwind CSS** to maintain a clean and consistent design. The backend is powered by **Node.js**, which handles scheduling logic, data processing, and communication with the AI layer. Antigravity is used to assist with ranking schedules and generating explanations based on user input. The project runs locally and does not rely on third-party hosting platforms.
+SchedMaster is built with a modern JavaScript frontend using **React** and **Vite** for fast development and performance. Styling is handled with **Tailwind CSS** to maintain a clean and consistent design. The backend is powered by **Node.js**, which handles scheduling logic, data processing, and communication with the AI layer. Antigravity is used to assist with ranking schedules based on user input. The project runs locally and does not rely on third-party hosting platforms.
 
 ---
 
